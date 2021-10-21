@@ -1,4 +1,4 @@
-const { Response } = require('../model/response');
+const { Response } = require('../model/response.model');
 
 module.exports = app => {
     let router = require('express').Router();
