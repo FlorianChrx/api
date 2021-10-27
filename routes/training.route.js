@@ -1,12 +1,13 @@
 const { Response } = require('../model/response.model');
+const { Training } = require('../model/training.model')
 const sender = require('./router')
 
 module.exports = app => {
     let router = require('express').Router();
-    const trainingController = require('../controllers/training.controller')
+    const defaultController = require('../controllers/default.controller')
 
     router.get('/', async (request, response) => {
-        trainingController.getAll()
+        defaultController.getAll(Training)
             .then(data => {
                 sender.send(new Response(true, "Trainings available in response data", data), response);
             })
@@ -17,7 +18,7 @@ module.exports = app => {
     })
 
     router.get('/:id', async (request, response) => {
-        trainingController.get(request.params.id)
+        defaultController.get(Training, request.params.id)
             .then(data => {
                 sender.send(new Response(true, "Training available in response data", data), response);
             })
@@ -28,7 +29,7 @@ module.exports = app => {
     })
 
     router.put('/', async (request, response) => {
-        trainingController.create(request.body)
+        defaultController.create(Training, request.body)
             .then(data => {
                 sender.send(new Response(true, "Training created !", data), response);
             })
@@ -38,7 +39,7 @@ module.exports = app => {
     })
 
     router.post('/', async (request, response) => {
-        trainingController.edit(request.body.id, request.body)
+        defaultController.edit(Training, request.body.id, request.body)
             .then(data => {
                 sender.send(new Response(true, "Training updated ! count in data", data), response);
             })
@@ -48,7 +49,7 @@ module.exports = app => {
     })
 
     router.delete('/:id', async (request, response) => {
-        trainingController.delete(request.params.id)
+        defaultController.delete(Training, request.params.id)
             .then(data => {
                 sender.send(new Response(true, "Training deleted ! count in data", data), response);
             })
