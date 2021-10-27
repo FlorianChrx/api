@@ -21,11 +21,11 @@ exports.get = async (model, id) => {
 
 /**
  * Save an element in database
- * @param {*} experience to save
- * @returns Promise the saved experience
+ * @param {*} element to save
+ * @returns Promise the saved element
  */
-exports.create = async (model, experience) => {
-    return await model.create(experience);
+exports.create = async (model, element) => {
+    return await model.create(element);
 }
 
 /**
@@ -42,14 +42,14 @@ exports.delete = async (model, id) => {
 }
 
 /**
- * Update an experience
- * @param {number} id of the experience to update
- * @param {Experience} experience modified to save
+ * Update an element
+ * @param {number} id of the element to update
+ * @param {*} element modified to save
  * @returns the number of elements updated (anormal if > 1)
  */
-exports.edit = async (model, id, experience) => {
-    delete experience.id;
-    return await model.update(experience, {
+exports.edit = async (model, id, element) => {
+    delete element.id;
+    return await model.update(element, {
         where: {
             id: id
         }
