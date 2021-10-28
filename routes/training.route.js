@@ -14,7 +14,6 @@ module.exports = app => {
             .catch(error => {
                 sender.send(new Response(false, error.message), response);
             })
-        sender.send(res, response)
     })
 
     router.get('/:id', async (request, response) => {
@@ -25,7 +24,6 @@ module.exports = app => {
             .catch(error => {
                 sender.send(new Response(false, error.message), response);
             })
-        sender.send(res, response)
     })
 
     router.put('/', async (request, response) => {
