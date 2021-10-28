@@ -40,6 +40,10 @@ async function getTradesByType(symbol, isSell) {
         where: {
             symbol: symbol,
             sell: isSell
-        }
+        },
+        order: [
+            ['timestamp', 'ASC'],
+        ]
+
     })
 }
