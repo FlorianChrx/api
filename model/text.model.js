@@ -4,7 +4,8 @@ const { orm } = require('../orm/sequelize');
 exports.Text = orm.define('Text', {
     id: {
         type: DataTypes.BIGINT,
-        primaryKey: true
+        primaryKey: true,
+        autoIncrement: true
     },
     tag: {
         type: DataTypes.STRING(128),
