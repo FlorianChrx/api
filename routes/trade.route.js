@@ -5,6 +5,7 @@ const sender = require('./router')
 module.exports = app => {
     let router = require('express').Router();
     const defaultController = require('../controllers/default.controller')
+    const tradeController = require('../controllers/trade.controller')
 
     router.get('/', async (request, response) => {
         defaultController.getAll(Trade)
@@ -50,6 +51,26 @@ module.exports = app => {
         defaultController.delete(Trade, request.params.id)
             .then(data => {
                 sender.send(new Response(true, "Trade deleted ! count in data", data), response);
+            })
+            .catch(error => {
+                sender.send(new Response(false, error.message), response);
+            })
+    })
+
+    router.get('/buy/:symbol', async (request, response) => {
+        tradeController.getBuyTrades(request.params.symbol)
+            .then(data => {
+                sender.send(new Response(true, "Trades availables in response data", data), response);
+            })
+            .catch(error => {
+                sender.send(new Response(false, error.message), response);
+            })
+    })
+
+    router.get('/sell/:symbol', async (request, response) => {
+        tradeController.getSellTrades(request.params.symbol)
+            .then(data => {
+                sender.send(new Response(true, "Trades availables in response data", data), response);
             })
             .catch(error => {
                 sender.send(new Response(false, error.message), response);
