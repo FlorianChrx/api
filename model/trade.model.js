@@ -4,7 +4,8 @@ const { orm } = require('../orm/sequelize');
 exports.Trade = orm.define('Trade', {
     id: {
         type: DataTypes.BIGINT,
-        primaryKey: true
+        primaryKey: true,
+        autoIncrement: true
     },
     price: {
         type: DataTypes.DOUBLE,
@@ -24,7 +25,8 @@ exports.Trade = orm.define('Trade', {
     },
     timestamp: {
         type: DataTypes.DATE,
-        allowNull: false
+        allowNull: false,
+        defaultValue: Date.now()
     },
 }, {
     tableName: 'trade'
