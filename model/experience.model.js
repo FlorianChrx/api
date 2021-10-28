@@ -2,7 +2,6 @@ const { DataTypes } = require('sequelize');
 const { orm } = require('../orm/sequelize');
 
 exports.Experience = orm.define('Experience', {
-    // Model attributes are defined here
     id: {
         type: DataTypes.BIGINT,
         primaryKey: true,
