@@ -1,4 +1,5 @@
-const { Trade } = require("../model/trade.model")
+const { Trade } = require('../model/trade.model')
+const { Sequelize } = require("sequelize");
 
 /**
  * Get buy trades filtered by symbol
@@ -23,8 +24,58 @@ exports.getSellTrades = async (symbol) => {
  * @param {*} symbol the symbol to analyze
  * @returns Promise the benefits (loses if negative)
  */
-exports.getAllBenefits = async (symbol) => {
-    throw new Error("Not yet implemented !");
+exports.getBenefits = async (symbol) => {
+
+    const buys = await this.getBuyTrades(symbol);
+    const sells = await this.getSellTrades(symbol);
+    let benefits = 0;
+    let index = 0;
+
+    sells.forEach(sell => {
+        while (sell.amount > 0) {
+            if (sell.amount > buys[index].amount) {
+                // If sell amount is bigger than buy one we use the buy amount for the calcul and reduce sell amount
+                benefits += buys[index].amount * sell.price - buys[index].amount * buys[index].price;
+                // We reduce the sell amount for next loop
+                sell.amount -= buys[index].amount;
+                // We go to nex buy because we consumed this one by uses his maximum amount
+                index++;
+            } else {
+                // If buy amount is bigger than sell one we use the sell amount for the calcul and reduce buy amount
+                benefits += sell.amount * sell.price - sell.amount * buys[index].price;
+                // We reduce buy amount for next sells calcul
+                buys[index].amount -= sell.amount;
+                // If we consumed the buy we go to next
+                if (buys[index].amount) index++;
+                // We just consumed the sell by uses his maximum amount
+                sell.amount = 0;
+            }
+        }
+    });
+
+    return benefits;
+
+}
+
+/**
+ * Calcul benefits for all symbols
+ * @returns Promise the benefices (loses if negative)
+ */
+exports.getAllBenefits = async () => {
+    symbols = await Trade.findAll({
+        attributes: [
+            [Sequelize.fn('DISTINCT', Sequelize.col('symbol')), 'symbol'],
+        ]
+    });
+
+    let benefits = 0;
+
+    for (let symbol of symbols) {
+        temp = await this.getBenefits(symbol.symbol);
+        benefits += temp;
+    }
+
+    return benefits;
 }
 
 /**

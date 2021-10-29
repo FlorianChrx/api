@@ -77,6 +77,26 @@ module.exports = app => {
             })
     })
 
+    router.get('/benefits/:symbol', async (request, response) => {
+        tradeController.getBenefits(request.params.symbol)
+            .then(data => {
+                sender.send(new Response(true, "Benefits available in response data", data), response);
+            })
+            .catch(error => {
+                sender.send(new Response(false, error.message), response);
+            })
+    })
+
+    router.get('/all/benefits', async (request, response) => {
+        tradeController.getAllBenefits()
+            .then(data => {
+                sender.send(new Response(true, "Benefits available in response data", data), response);
+            })
+            .catch(error => {
+                sender.send(new Response(false, error.message), response);
+            })
+    })
+
     app.use('/api/trade', router)
 
 }
