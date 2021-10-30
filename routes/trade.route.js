@@ -126,6 +126,17 @@ module.exports = app => {
                 sender.send(new Response(false, error.message), response);
             })
     })
+
+    router.get('/invested/:symbol', async (request, response) => {
+        tradeController.getActualInvested(request.params.symbol)
+            .then(data => {
+                sender.send(new Response(true, "Symbols available in response data", data), response);
+            })
+            .catch(error => {
+                sender.send(new Response(false, error.message), response);
+            })
+    })
+
     app.use('/api/trade', router)
 
 }

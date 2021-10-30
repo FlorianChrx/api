@@ -180,3 +180,14 @@ exports.getActualAmount = async (symbol) => {
 
     return actualAmount;
 }
+
+/**
+ * Get the actual money invested for a symbol
+ * @param {*} symbol the symbol to analyze
+ * @returns Promise the actual money invested for the symbol
+ */
+exports.getActualInvested = async (symbol) => {
+    averagePrice = await this.getAveragePrice(symbol);
+    actualAmount = await this.getActualAmount(symbol);
+    return averagePrice * actualAmount;
+}
