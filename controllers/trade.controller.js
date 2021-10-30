@@ -79,6 +79,45 @@ exports.getAllBenefits = async () => {
 }
 
 /**
+ * Calcul average price for a symbol
+ * @param {*} symbol the symbol to analyze
+ * @returns Promise the average price for this symbol
+ */
+exports.getAveragePrice = async (symbol) => {
+    const buys = await this.getBuyTrades(symbol);
+    const sells = await this.getSellTrades(symbol);
+    let index = 0;
+
+    sells.forEach(sell => {
+        while (sell.amount > 0) {
+            if (sell.amount > buys[index].amount) {
+                // We reduce the sell amount for next loop
+                sell.amount -= buys[index].amount;
+                // We go to nex buy because we consumed this one by uses his maximum amount
+                index++;
+            } else {
+                // We reduce buy amount for next sells calcul
+                buys[index].amount -= sell.amount;
+                // If we consumed the buy we go to next
+                if (buys[index].amount) index++;
+                // We just consumed the sell by uses his maximum amount
+                sell.amount = 0;
+            }
+        }
+    });
+
+    let totalAmount = 0;
+    let totalPrice = 0;
+
+    for (; index < buys.length; index++) {
+        totalAmount += buys[index].amount;
+        totalPrice += buys[index].amount * buys[index].price
+    }
+
+    return totalPrice / totalAmount;
+}
+
+/**
  * Get trades filtered by symbol and type
  * isSell false = buy trade
  * isSell true = sell trade

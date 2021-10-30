@@ -87,6 +87,16 @@ module.exports = app => {
             })
     })
 
+    router.get('/average/:symbol', async (request, response) => {
+        tradeController.getAveragePrice(request.params.symbol)
+            .then(data => {
+                sender.send(new Response(true, "Average price available in response data", data), response);
+            })
+            .catch(error => {
+                sender.send(new Response(false, error.message), response);
+            })
+    })
+
     router.get('/all/benefits', async (request, response) => {
         tradeController.getAllBenefits()
             .then(data => {
