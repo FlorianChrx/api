@@ -62,11 +62,7 @@ exports.getBenefits = async (symbol) => {
  * @returns Promise the benefices (loses if negative)
  */
 exports.getAllBenefits = async () => {
-    symbols = await Trade.findAll({
-        attributes: [
-            [Sequelize.fn('DISTINCT', Sequelize.col('symbol')), 'symbol'],
-        ]
-    });
+    symbols = await this.getSymbols();
 
     let benefits = 0;
 
@@ -76,6 +72,18 @@ exports.getAllBenefits = async () => {
     }
 
     return benefits;
+}
+
+/**
+ * Get alls the symbols
+ * @returns Promise the symbols
+ */
+exports.getSymbols = async () => {
+    return await Trade.findAll({
+        attributes: [
+            [Sequelize.fn('DISTINCT', Sequelize.col('symbol')), 'symbol'],
+        ]
+    });
 }
 
 /**
