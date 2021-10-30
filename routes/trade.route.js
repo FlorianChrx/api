@@ -117,6 +117,15 @@ module.exports = app => {
             })
     })
 
+    router.get('/amount/:symbol', async (request, response) => {
+        tradeController.getActualAmount(request.params.symbol)
+            .then(data => {
+                sender.send(new Response(true, "Symbols available in response data", data), response);
+            })
+            .catch(error => {
+                sender.send(new Response(false, error.message), response);
+            })
+    })
     app.use('/api/trade', router)
 
 }
