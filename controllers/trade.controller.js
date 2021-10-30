@@ -191,3 +191,20 @@ exports.getActualInvested = async (symbol) => {
     actualAmount = await this.getActualAmount(symbol);
     return averagePrice * actualAmount;
 }
+
+/**
+ * Get the actual money invested for all symbols
+ * @returns Promise the full money invested
+ */
+exports.getAllActualInvested = async () => {
+    symbols = await this.getSymbols();
+
+    let actualInvested = 0;
+
+    for (let symbol of symbols) {
+        temp = await this.getActualInvested(symbol);
+        actualInvested += temp;
+    }
+
+    return actualInvested;
+}
