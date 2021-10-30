@@ -66,7 +66,7 @@ exports.getAllBenefits = async () => {
     let benefits = 0;
 
     for (let symbol of symbols) {
-        temp = await this.getBenefits(symbol.symbol);
+        temp = await this.getBenefits(symbol);
         benefits += temp;
     }
 
@@ -78,11 +78,11 @@ exports.getAllBenefits = async () => {
  * @returns Promise the symbols
  */
 exports.getSymbols = async () => {
-    return await Trade.findAll({
+    return (await Trade.findAll({
         attributes: [
             [Sequelize.fn('DISTINCT', Sequelize.col('symbol')), 'symbol'],
         ]
-    });
+    })).map(symbol => symbol.symbol);
 }
 
 /**
