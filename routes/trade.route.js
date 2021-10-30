@@ -107,6 +107,16 @@ module.exports = app => {
             })
     })
 
+    router.get('/all/symbols', async (request, response) => {
+        tradeController.getSymbols()
+            .then(data => {
+                sender.send(new Response(true, "Symbols available in response data", data), response);
+            })
+            .catch(error => {
+                sender.send(new Response(false, error.message), response);
+            })
+    })
+
     app.use('/api/trade', router)
 
 }
