@@ -292,3 +292,14 @@ exports.simulateBenefits = async (symbol, price, amount) => {
     const simulatedBenefits = await this.simulateSell(symbol, price, amount);
     return benefits + simulatedBenefits;
 }
+
+/**
+ * Get full benefits for a symbol if we simulate a sull sell trade
+ * @param {*} symbol the symbol to analyze
+ * @param {*} price the sell price
+ * @returns 
+ */
+exports.simulateAllBenefits = async (symbol, price) => {
+    const amount = await this.getActualAmount(symbol);
+    return await this.simulateBenefits(symbol, price, amount);
+}
