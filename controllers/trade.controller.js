@@ -293,6 +293,12 @@ exports.simulateBenefits = async (symbol, price, amount) => {
     return benefits + simulatedBenefits;
 }
 
+/**
+ * Determine how much of the symbol to sell to be at 0 benefits (if its negative)
+ * It's a sort of TP to be flat
+ * @param {*} symbol the symbol to analyze
+ * @param {*} price the price we chose to TP
+ */
 exports.goToFlat = async (symbol, price) => {
     throw new Error("Not yet implemented !");
 }

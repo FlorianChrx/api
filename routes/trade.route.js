@@ -182,7 +182,7 @@ module.exports = app => {
         tradeController.goToFlat(request.params.symbol, request.params.price)
             .then(data => {
                 sender.send(new Response(true, "Need to sell this amount of this symbol to be flat", data), response);
-                      })
+            })
             .catch(error => {
                 sender.send(new Response(false, error.message), response);
             })
