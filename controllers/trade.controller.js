@@ -211,3 +211,61 @@ exports.getAllActualInvested = async () => {
 
     return actualInvested;
 }
+
+/**
+ * Get benefits of a potentially sell is done at a defined price
+ * @param {*} symbol the symbol to analyze
+ * @param {*} price the sell price
+ * @param {*} amount the amount sell
+ */
+exports.simulateSell = async (symbol, price, amount) => {
+    const buys = await this.getBuyTrades(symbol);
+    const sells = await this.getSellTrades(symbol);
+    let index = 0;
+
+    sells.forEach(sell => {
+        while (sell.amount > 0) {
+            if (sell.amount > buys[index].amount) {
+                // We reduce the sell amount for next loop
+                sell.amount -= buys[index].amount;
+                // We go to nex buy because we consumed this one by uses his maximum amount
+                index++;
+            } else {
+                // We reduce buy amount for next sells calcul
+                buys[index].amount -= sell.amount;
+                // If we consumed the buy we go to next
+                if (buys[index].amount) index++;
+                // We just consumed the sell by uses his maximum amount
+                sell.amount = 0;
+            }
+        }
+        if (sell.amount < (1 / (10 ^ 12))) sell.amount = 0;
+    });
+
+    // Now FIFO skipped, calcul benefit of this trade
+
+    let benefits = 0;
+
+    while (amount > 0) {
+        if (amount > buys[index].amount) {
+            // If sell amount is bigger than buy one we use the buy amount for the calcul and reduce sell amount
+            benefits += buys[index].amount * price - buys[index].amount * buys[index].price;
+            // We reduce the sell amount for next loop
+            amount -= buys[index].amount;
+            // We go to nex buy because we consumed this one by uses his maximum amount
+            index++;
+        } else {
+            // If buy amount is bigger than sell one we use the sell amount for the calcul and reduce buy amount
+            benefits += amount * price - amount * buys[index].price;
+            // We reduce buy amount for next sells calcul
+            buys[index].amount -= amount;
+            // If we consumed the buy we go to next
+            if (buys[index].amount) index++;
+            // We just consumed the sell by uses his maximum amount
+            amount = 0;
+        }
+        if (amount < (1 / (10 ^ 12))) amount = 0;
+    }
+
+    return benefits;
+}

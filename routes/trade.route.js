@@ -147,6 +147,16 @@ module.exports = app => {
             })
     })
 
+
+    router.get('/simulate/:symbol/:price/:amount', async (request, response) => {
+        tradeController.simulateSell(request.params.symbol, request.params.price, request.params.amount)
+            .then(data => {
+                sender.send(new Response(true, "Benefits for this sell available in response data", data), response);
+            })
+            .catch(error => {
+                sender.send(new Response(false, error.message), response);
+            })
+    })
     app.use('/api/trade', router)
 
 }
