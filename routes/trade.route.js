@@ -148,20 +148,30 @@ module.exports = app => {
     })
 
 
-    router.get('/simulate/:symbol/:price/:amount', async (request, response) => {
+    router.get('/simulate/sell/:symbol/:price/:amount', async (request, response) => {
         tradeController.simulateSell(request.params.symbol, request.params.price, request.params.amount)
             .then(data => {
-                sender.send(new Response(true, "Benefits for this sell available in response data", data), response);
+                sender.send(new Response(true, "Gains for this sell available in response data", data), response);
             })
             .catch(error => {
                 sender.send(new Response(false, error.message), response);
             })
     })
 
-    router.get('/all/simulate/:symbol/:price/', async (request, response) => {
+    router.get('/simulate/sell/:symbol/:price', async (request, response) => {
         tradeController.simulateFullSell(request.params.symbol, request.params.price)
             .then(data => {
-                sender.send(new Response(true, "Benefits for sell all of this symbol available in response data", data), response);
+                sender.send(new Response(true, "Gains for sell all of this symbol available in response data", data), response);
+            })
+            .catch(error => {
+                sender.send(new Response(false, error.message), response);
+            })
+    })
+
+    router.get('/simulate/benefits/:symbol/:price/:amount', async (request, response) => {
+        tradeController.simulateBenefits(request.params.symbol, request.params.price, request.params.amount)
+            .then(data => {
+                sender.send(new Response(true, "Benefits after simulated sell trade for this symbol available in response data", data), response);
             })
             .catch(error => {
                 sender.send(new Response(false, error.message), response);
