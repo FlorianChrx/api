@@ -178,6 +178,17 @@ module.exports = app => {
             })
     })
 
+
+    router.get('/flat/:symbol/:price', async (request, response) => {
+        tradeController.goToFlat(request.params.symbol, request.params.price)
+            .then(data => {
+                sender.send(new Response(true, "Need to sell this amount of this symbol to be flat", data), response);
+            })
+            .catch(error => {
+                sender.send(new Response(false, error.message), response);
+            })
+    })
+
     app.use('/api/trade', router)
 
 }
