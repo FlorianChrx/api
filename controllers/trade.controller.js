@@ -50,6 +50,7 @@ exports.getBenefits = async (symbol) => {
                 // We just consumed the sell by uses his maximum amount
                 sell.amount = 0;
             }
+            if (sell.amount < (1 / (10 ^ 12))) sell.amount = 0;
         }
     });
 
@@ -110,6 +111,7 @@ exports.getAveragePrice = async (symbol) => {
                 // We just consumed the sell by uses his maximum amount
                 sell.amount = 0;
             }
+            if (sell.amount < (1 / (10 ^ 12))) sell.amount = 0;
         }
     });
 
@@ -169,6 +171,7 @@ exports.getActualAmount = async (symbol) => {
                 // We just consumed the sell by uses his maximum amount
                 sell.amount = 0;
             }
+            if (sell.amount < (1 / (10 ^ 12))) sell.amount = 0;
         }
     });
 
