@@ -296,3 +296,14 @@ exports.simulateBenefits = async (symbol, price, amount) => {
 exports.goToFlat = async (symbol, price) => {
     throw new Error("Not yet implemented !");
 }
+
+/**
+ * Get full benefits for a symbol if we simulate a sull sell trade
+ * @param {*} symbol the symbol to analyze
+ * @param {*} price the sell price
+ * @returns 
+ */
+exports.simulateAllBenefits = async (symbol, price) => {
+    const amount = await this.getActualAmount(symbol);
+    return await this.simulateBenefits(symbol, price, amount);
+}
