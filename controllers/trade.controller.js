@@ -292,3 +292,7 @@ exports.simulateBenefits = async (symbol, price, amount) => {
     const simulatedBenefits = await this.simulateSell(symbol, price, amount);
     return benefits + simulatedBenefits;
 }
+
+exports.goToFlat = async (symbol, price) => {
+    throw new Error("Not yet implemented !");
+}
