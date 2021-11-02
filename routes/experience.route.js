@@ -1,34 +1,33 @@
 const { Response } = require('../model/response.model');
+const { Experience } = require('../model/experience.model')
 const sender = require('./router')
 
 module.exports = app => {
     let router = require('express').Router();
-    const experienceController = require('../controllers/experience.controller')
+    const defaultController = require('../controllers/default.controller')
 
     router.get('/', async (request, response) => {
-        experienceController.getAll()
+        defaultController.getAll(Experience)
             .then(data => {
                 sender.send(new Response(true, "Experiences available in response data", data), response);
             })
             .catch(error => {
                 sender.send(new Response(false, error.message), response);
             })
-        sender.send(res, response)
     })
 
     router.get('/:id', async (request, response) => {
-        experienceController.get(request.params.id)
+        defaultController.get(Experience, request.params.id)
             .then(data => {
                 sender.send(new Response(true, "Experience available in response data", data), response);
             })
             .catch(error => {
                 sender.send(new Response(false, error.message), response);
             })
-        sender.send(res, response)
     })
 
     router.put('/', async (request, response) => {
-        experienceController.create(request.body)
+        defaultController.create(Experience, request.body)
             .then(data => {
                 sender.send(new Response(true, "Experience created !", data), response);
             })
@@ -38,7 +37,7 @@ module.exports = app => {
     })
 
     router.post('/', async (request, response) => {
-        experienceController.edit(request.body.id, request.body)
+        defaultController.edit(Experience, request.body.id, request.body)
             .then(data => {
                 sender.send(new Response(true, "Experience updated ! count in data", data), response);
             })
@@ -48,7 +47,7 @@ module.exports = app => {
     })
 
     router.delete('/:id', async (request, response) => {
-        experienceController.delete(request.params.id)
+        defaultController.delete(Experience, request.params.id)
             .then(data => {
                 sender.send(new Response(true, "Experience deleted ! count in data", data), response);
             })
