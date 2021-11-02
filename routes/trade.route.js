@@ -157,6 +157,17 @@ module.exports = app => {
                 sender.send(new Response(false, error.message), response);
             })
     })
+
+    router.get('/all/simulate/:symbol/:price/', async (request, response) => {
+        tradeController.simulateFullSell(request.params.symbol, request.params.price)
+            .then(data => {
+                sender.send(new Response(true, "Benefits for sell all of this symbol available in response data", data), response);
+            })
+            .catch(error => {
+                sender.send(new Response(false, error.message), response);
+            })
+    })
+
     app.use('/api/trade', router)
 
 }

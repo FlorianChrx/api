@@ -213,6 +213,16 @@ exports.getAllActualInvested = async () => {
 }
 
 /**
+ * Get benefits if sell all symbol at a defined price
+ * @param {*} symbol the symbol to analyze
+ * @param {*} price the sell price
+ */
+exports.simulateFullSell = async (symbol, price) => {
+    const amountToSell = await this.getActualAmount(symbol);
+    return await this.simulateSell(symbol, price, amountToSell);
+}
+
+/**
  * Get benefits of a potentially sell is done at a defined price
  * @param {*} symbol the symbol to analyze
  * @param {*} price the sell price
