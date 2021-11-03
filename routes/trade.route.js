@@ -120,7 +120,17 @@ module.exports = app => {
     router.get('/amount/symbol/:symbol', async (request, response) => {
         tradeController.getActualAmount(request.params.symbol)
             .then(data => {
-                sender.send(new Response(true, "Symbols available in response data", data), response);
+                sender.send(new Response(true, "Actual amount for this symbol available in response data", data), response);
+            })
+            .catch(error => {
+                sender.send(new Response(false, error.message), response);
+            })
+    })
+
+    router.get('/amount/all', async (request, response) => {
+        tradeController.getAllActualAmount(request.params.symbol)
+            .then(data => {
+                sender.send(new Response(true, "Actual amount for all symbols available in response data", data), response);
             })
             .catch(error => {
                 sender.send(new Response(false, error.message), response);
