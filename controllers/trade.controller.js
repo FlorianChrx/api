@@ -305,3 +305,15 @@ exports.simulateAllBenefits = async (symbol, price) => {
     const amount = await this.getActualAmount(symbol);
     return await this.simulateBenefits(symbol, price, amount);
 }
+
+/**
+ * Get benefits of a potentially sell is done at a defined price
+ * @param {*} symbol the symbol to analyze
+ * @param {*} price the sell price
+ * @param {*} percentage the percentage of amount to sell
+ * @returns Promise benefits after a partial sell simulation
+ */
+exports.simulatePartialSell = async (symbol, price, percentage) => {
+    let amount = await this.getActualAmount(symbol);
+    return await this.simulateSell(symbol, price, amount * percentage / 100);
+}
