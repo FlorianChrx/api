@@ -216,6 +216,7 @@ exports.getAllActualInvested = async () => {
  * Get benefits if sell all symbol at a defined price
  * @param {*} symbol the symbol to analyze
  * @param {*} price the sell price
+ * @returns Promise gains for this full sell
  */
 exports.simulateFullSell = async (symbol, price) => {
     const amountToSell = await this.getActualAmount(symbol);
@@ -227,6 +228,7 @@ exports.simulateFullSell = async (symbol, price) => {
  * @param {*} symbol the symbol to analyze
  * @param {*} price the sell price
  * @param {*} amount the amount sell
+ * @returns Promise gains for a sell
  */
 exports.simulateSell = async (symbol, price, amount) => {
     const buys = await this.getBuyTrades(symbol);
@@ -285,7 +287,7 @@ exports.simulateSell = async (symbol, price, amount) => {
  * @param {*} symbol the symbol to analyze
  * @param {*} price the sell price
  * @param {*} amount the simulated amount to sell
- * @returns 
+ * @returns Promise benefits after a sell simulation
  */
 exports.simulateBenefits = async (symbol, price, amount) => {
     const benefits = await this.getBenefits(symbol);
@@ -297,7 +299,7 @@ exports.simulateBenefits = async (symbol, price, amount) => {
  * Get full benefits for a symbol if we simulate a sull sell trade
  * @param {*} symbol the symbol to analyze
  * @param {*} price the sell price
- * @returns 
+ * @returns Promise benefits after a full sell simulation
  */
 exports.simulateAllBenefits = async (symbol, price) => {
     const amount = await this.getActualAmount(symbol);
