@@ -198,6 +198,16 @@ module.exports = app => {
             })
     })
 
+    router.get('/simulate/benefits/partial/:symbol/:price/:percentage', async (request, response) => {
+        tradeController.simulatePartialBenefits(request.params.symbol, request.params.price, request.params.percentage)
+            .then(data => {
+                sender.send(new Response(true, "Benefits after partial sell available in response data", data), response);
+            })
+            .catch(error => {
+                sender.send(new Response(false, error.message), response);
+            })
+    })
+
     app.use('/api/trade', router)
 
 }
