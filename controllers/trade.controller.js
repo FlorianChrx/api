@@ -329,3 +329,23 @@ exports.simulatePartialBenefits = async (symbol, price, percentage) => {
     let amount = await this.getActualAmount(symbol);
     return await this.simulateBenefits(symbol, price, amount * percentage / 100);
 }
+
+/**
+ * Get all actual amounts for all symbols
+ * @returns Promise an array of an array of amounts 
+ */
+exports.getAllActualAmount = async () => {
+    symbols = await this.getSymbols();
+
+    let array = [];
+
+    for (let symbol of symbols) {
+        amount = await this.getActualAmount(symbol);
+        array.push({
+            symbol: symbol,
+            amount: amount
+        })
+    }
+
+    return array;
+}
