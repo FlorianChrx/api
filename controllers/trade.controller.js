@@ -1,5 +1,6 @@
 const { Trade } = require('../model/trade.model')
 const { Sequelize } = require("sequelize");
+const defaultController = require('./default.controller');
 
 /**
  * Get buy trades filtered by symbol
@@ -348,4 +349,35 @@ exports.getAllActualAmount = async () => {
     }
 
     return array;
+}
+
+/**
+ * Refresh the amount for a symbol by execute a trade with a price of 0
+ * (A chain fee or a free obtain token is a sell or buy at 0)
+ * @param {*} symbol the symbol to treat
+ * @param {*} amount the real amount 
+ */
+exports.refreshAmount = async (symbol, amount) => {
+    let theoricAmount = await this.getActualAmount(symbol);
+    if (theoricAmount < amount) {
+        let correction = amount - theoricAmount;
+        if (correction < 10 ** -13) return;
+        defaultController.create(Trade, {
+            amount: realAmount,
+            price: 0,
+            sell: false,
+            symbol: symbol,
+            timestamp: Date.now()
+        })
+    } else if (theoricAmount > amount) {
+        let correction = theoricAmount - amount;
+        if (correction < 10 ** -13) return;
+        defaultController.create(Trade, {
+            amount: theoricAmount - amount,
+            price: 0,
+            sell: true,
+            symbol: symbol,
+            timestamp: Date.now()
+        })
+    }
 }

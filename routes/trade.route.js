@@ -218,6 +218,16 @@ module.exports = app => {
             })
     })
 
+    router.post('/refresh/:symbol/:amount', async (request, response) => {
+        tradeController.refreshAmount(request.params.symbol, request.params.amount)
+            .then(() => {
+                sender.send(new Response(true, "Amount refreshed !"), response);
+            })
+            .catch(error => {
+                sender.send(new Response(false, error.message), response);
+            })
+    })
+
     app.use('/api/trade', router)
 
 }
