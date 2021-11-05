@@ -51,7 +51,7 @@ exports.getBenefits = async (symbol) => {
                 // We just consumed the sell by uses his maximum amount
                 sell.amount = 0;
             }
-            if (sell.amount < (1 / (10 ^ 12))) sell.amount = 0;
+            if (sell.amount < 10 ** -13) sell.amount = 0;
         }
     });
 
@@ -112,7 +112,7 @@ exports.getAveragePrice = async (symbol) => {
                 // We just consumed the sell by uses his maximum amount
                 sell.amount = 0;
             }
-            if (sell.amount < (1 / (10 ^ 12))) sell.amount = 0;
+            if (sell.amount < 10 ** -13) sell.amount = 0;
         }
     });
 
@@ -172,7 +172,7 @@ exports.getActualAmount = async (symbol) => {
                 // We just consumed the sell by uses his maximum amount
                 sell.amount = 0;
             }
-            if (sell.amount < (1 / (10 ^ 12))) sell.amount = 0;
+            if (sell.amount < 10 ** -13) sell.amount = 0;
         }
     });
 
@@ -252,7 +252,7 @@ exports.simulateSell = async (symbol, price, amount) => {
                 sell.amount = 0;
             }
         }
-        if (sell.amount < (1 / (10 ^ 12))) sell.amount = 0;
+        if (sell.amount < 10 ** -13) sell.amount = 0;
     });
 
     // Now FIFO skipped, calcul benefit of this trade
@@ -277,7 +277,7 @@ exports.simulateSell = async (symbol, price, amount) => {
             // We just consumed the sell by uses his maximum amount
             amount = 0;
         }
-        if (amount < (1 / (10 ^ 12))) amount = 0;
+        if (amount < 10 ** -13) amount = 0;
     }
 
     return benefits;
