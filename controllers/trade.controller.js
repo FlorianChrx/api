@@ -47,7 +47,7 @@ exports.getBenefits = async (symbol) => {
                 // We reduce buy amount for next sells calcul
                 buys[index].amount -= sell.amount;
                 // If we consumed the buy we go to next
-                if (buys[index].amount) index++;
+                if (buys[index].amount < 10 ** -13) index++;
                 // We just consumed the sell by uses his maximum amount
                 sell.amount = 0;
             }
@@ -108,7 +108,7 @@ exports.getAveragePrice = async (symbol) => {
                 // We reduce buy amount for next sells calcul
                 buys[index].amount -= sell.amount;
                 // If we consumed the buy we go to next
-                if (buys[index].amount) index++;
+                if (buys[index].amount < 10 ** -13) index++;
                 // We just consumed the sell by uses his maximum amount
                 sell.amount = 0;
             }
@@ -168,7 +168,7 @@ exports.getActualAmount = async (symbol) => {
                 // We reduce buy amount for next sells calcul
                 buys[index].amount -= sell.amount;
                 // If we consumed the buy we go to next
-                if (buys[index].amount) index++;
+                if (buys[index].amount < 10 ** -13) index++;
                 // We just consumed the sell by uses his maximum amount
                 sell.amount = 0;
             }
@@ -179,6 +179,8 @@ exports.getActualAmount = async (symbol) => {
     let actualAmount = 0;
 
     for (; index < buys.length; index++) {
+        console.log(actualAmount)
+        console.log(buys[index].amount)
         actualAmount += buys[index].amount;
     }
 
@@ -247,7 +249,7 @@ exports.simulateSell = async (symbol, price, amount) => {
                 // We reduce buy amount for next sells calcul
                 buys[index].amount -= sell.amount;
                 // If we consumed the buy we go to next
-                if (buys[index].amount) index++;
+                if (buys[index].amount < 10 ** -13) index++;
                 // We just consumed the sell by uses his maximum amount
                 sell.amount = 0;
             }
@@ -273,7 +275,7 @@ exports.simulateSell = async (symbol, price, amount) => {
             // We reduce buy amount for next sells calcul
             buys[index].amount -= amount;
             // If we consumed the buy we go to next
-            if (buys[index].amount) index++;
+            if (buys[index].amount < 10 ** -13) index++;
             // We just consumed the sell by uses his maximum amount
             amount = 0;
         }
