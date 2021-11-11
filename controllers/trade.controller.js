@@ -179,8 +179,6 @@ exports.getActualAmount = async (symbol) => {
     let actualAmount = 0;
 
     for (; index < buys.length; index++) {
-        console.log(actualAmount)
-        console.log(buys[index].amount)
         actualAmount += buys[index].amount;
     }
 
