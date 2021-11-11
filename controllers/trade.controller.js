@@ -124,7 +124,7 @@ exports.getAveragePrice = async (symbol) => {
         totalPrice += buys[index].amount * buys[index].price
     }
 
-    return +(totalPrice / totalAmount).toFixed(12);
+    return +(totalPrice / totalAmount).toFixed(2);
 }
 
 /**
