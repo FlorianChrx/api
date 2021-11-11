@@ -55,7 +55,7 @@ exports.getBenefits = async (symbol) => {
         }
     });
 
-    return benefits;
+    return +benefits.toFixed(2);
 }
 
 /**
@@ -72,7 +72,7 @@ exports.getAllBenefits = async () => {
         benefits += temp;
     }
 
-    return benefits;
+    return +benefits.toFixed(2);
 }
 
 /**
@@ -124,7 +124,7 @@ exports.getAveragePrice = async (symbol) => {
         totalPrice += buys[index].amount * buys[index].price
     }
 
-    return totalPrice / totalAmount;
+    return +(totalPrice / totalAmount).toFixed(12);
 }
 
 /**
@@ -182,7 +182,7 @@ exports.getActualAmount = async (symbol) => {
         actualAmount += buys[index].amount;
     }
 
-    return actualAmount;
+    return +actualAmount.toFixed(12);
 }
 
 /**
@@ -193,7 +193,7 @@ exports.getActualAmount = async (symbol) => {
 exports.getActualInvested = async (symbol) => {
     averagePrice = await this.getAveragePrice(symbol);
     actualAmount = await this.getActualAmount(symbol);
-    return averagePrice * actualAmount;
+    return +(averagePrice * actualAmount).toFixed(12);
 }
 
 /**
@@ -210,7 +210,7 @@ exports.getAllActualInvested = async () => {
         actualInvested += temp;
     }
 
-    return actualInvested;
+    return +actualInvested.toFixed(12);
 }
 
 /**
@@ -221,7 +221,7 @@ exports.getAllActualInvested = async () => {
  */
 exports.simulateFullSell = async (symbol, price) => {
     const amountToSell = await this.getActualAmount(symbol);
-    return await this.simulateSell(symbol, price, amountToSell);
+    return await this.simulateSell(symbol, price, +amountToSell.toFixed(12));
 }
 
 /**
@@ -280,7 +280,7 @@ exports.simulateSell = async (symbol, price, amount) => {
         if (amount < 10 ** -13) amount = 0;
     }
 
-    return benefits;
+    return +benefits.toFixed(12);
 }
 
 /**
@@ -293,7 +293,7 @@ exports.simulateSell = async (symbol, price, amount) => {
 exports.simulateBenefits = async (symbol, price, amount) => {
     const benefits = await this.getBenefits(symbol);
     const simulatedBenefits = await this.simulateSell(symbol, price, amount);
-    return benefits + simulatedBenefits;
+    return +(benefits + simulatedBenefits).toFixed(2);
 }
 
 /**
