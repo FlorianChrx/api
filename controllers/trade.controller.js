@@ -363,7 +363,7 @@ exports.refreshAmount = async (symbol, amount) => {
         let correction = amount - theoricAmount;
         if (correction < 10 ** -13) return;
         defaultController.create(Trade, {
-            amount: realAmount,
+            amount: correction.toFixed(12),
             price: 0,
             sell: false,
             symbol: symbol,
@@ -373,7 +373,7 @@ exports.refreshAmount = async (symbol, amount) => {
         let correction = theoricAmount - amount;
         if (correction < 10 ** -13) return;
         defaultController.create(Trade, {
-            amount: theoricAmount - amount,
+            amount: correction.toFixed(12),
             price: 0,
             sell: true,
             symbol: symbol,
