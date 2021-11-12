@@ -39,7 +39,7 @@ module.exports = app => {
     router.post('/', async (request, response) => {
         defaultController.edit(Experience, request.body.id, request.body)
             .then(data => {
-                sender.send(new Response(true, "Experience updated ! count in data", data), response);
+                sender.send(new Response(data == 1, `${data} experiences deleted (count in data)`, data), response);
             })
             .catch(error => {
                 sender.send(new Response(false, error.message), response);
@@ -49,7 +49,7 @@ module.exports = app => {
     router.delete('/:id', async (request, response) => {
         defaultController.delete(Experience, request.params.id)
             .then(data => {
-                sender.send(new Response(true, "Experience deleted ! count in data", data), response);
+                sender.send(new Response(data == 1, `${data} experiences deleted (count in data)`, data), response);
             })
             .catch(error => {
                 sender.send(new Response(false, error.message), response);

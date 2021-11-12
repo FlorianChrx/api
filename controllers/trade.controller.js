@@ -47,7 +47,7 @@ exports.getBenefits = async (symbol) => {
                 // We reduce buy amount for next sells calcul
                 buys[index].amount -= sell.amount;
                 // If we consumed the buy we go to next
-                if (buys[index].amount) index++;
+                if (buys[index].amount < 10 ** -13) index++;
                 // We just consumed the sell by uses his maximum amount
                 sell.amount = 0;
             }
@@ -55,7 +55,7 @@ exports.getBenefits = async (symbol) => {
         }
     });
 
-    return benefits;
+    return +benefits.toFixed(2);
 }
 
 /**
@@ -72,7 +72,7 @@ exports.getAllBenefits = async () => {
         benefits += temp;
     }
 
-    return benefits;
+    return +benefits.toFixed(2);
 }
 
 /**
@@ -108,7 +108,7 @@ exports.getAveragePrice = async (symbol) => {
                 // We reduce buy amount for next sells calcul
                 buys[index].amount -= sell.amount;
                 // If we consumed the buy we go to next
-                if (buys[index].amount) index++;
+                if (buys[index].amount < 10 ** -13) index++;
                 // We just consumed the sell by uses his maximum amount
                 sell.amount = 0;
             }
@@ -124,7 +124,7 @@ exports.getAveragePrice = async (symbol) => {
         totalPrice += buys[index].amount * buys[index].price
     }
 
-    return totalPrice / totalAmount;
+    return +(totalPrice / totalAmount).toFixed(2);
 }
 
 /**
@@ -168,7 +168,7 @@ exports.getActualAmount = async (symbol) => {
                 // We reduce buy amount for next sells calcul
                 buys[index].amount -= sell.amount;
                 // If we consumed the buy we go to next
-                if (buys[index].amount) index++;
+                if (buys[index].amount < 10 ** -13) index++;
                 // We just consumed the sell by uses his maximum amount
                 sell.amount = 0;
             }
@@ -182,7 +182,7 @@ exports.getActualAmount = async (symbol) => {
         actualAmount += buys[index].amount;
     }
 
-    return actualAmount;
+    return +actualAmount.toFixed(12);
 }
 
 /**
@@ -193,7 +193,7 @@ exports.getActualAmount = async (symbol) => {
 exports.getActualInvested = async (symbol) => {
     averagePrice = await this.getAveragePrice(symbol);
     actualAmount = await this.getActualAmount(symbol);
-    return averagePrice * actualAmount;
+    return +(averagePrice * actualAmount).toFixed(12);
 }
 
 /**
@@ -210,7 +210,7 @@ exports.getAllActualInvested = async () => {
         actualInvested += temp;
     }
 
-    return actualInvested;
+    return +actualInvested.toFixed(12);
 }
 
 /**
@@ -221,7 +221,7 @@ exports.getAllActualInvested = async () => {
  */
 exports.simulateFullSell = async (symbol, price) => {
     const amountToSell = await this.getActualAmount(symbol);
-    return await this.simulateSell(symbol, price, amountToSell);
+    return await this.simulateSell(symbol, price, +amountToSell.toFixed(12));
 }
 
 /**
@@ -247,7 +247,7 @@ exports.simulateSell = async (symbol, price, amount) => {
                 // We reduce buy amount for next sells calcul
                 buys[index].amount -= sell.amount;
                 // If we consumed the buy we go to next
-                if (buys[index].amount) index++;
+                if (buys[index].amount < 10 ** -13) index++;
                 // We just consumed the sell by uses his maximum amount
                 sell.amount = 0;
             }
@@ -273,14 +273,14 @@ exports.simulateSell = async (symbol, price, amount) => {
             // We reduce buy amount for next sells calcul
             buys[index].amount -= amount;
             // If we consumed the buy we go to next
-            if (buys[index].amount) index++;
+            if (buys[index].amount < 10 ** -13) index++;
             // We just consumed the sell by uses his maximum amount
             amount = 0;
         }
         if (amount < 10 ** -13) amount = 0;
     }
 
-    return benefits;
+    return +benefits.toFixed(12);
 }
 
 /**
@@ -293,7 +293,7 @@ exports.simulateSell = async (symbol, price, amount) => {
 exports.simulateBenefits = async (symbol, price, amount) => {
     const benefits = await this.getBenefits(symbol);
     const simulatedBenefits = await this.simulateSell(symbol, price, amount);
-    return benefits + simulatedBenefits;
+    return +(benefits + simulatedBenefits).toFixed(2);
 }
 
 /**
@@ -363,7 +363,7 @@ exports.refreshAmount = async (symbol, amount) => {
         let correction = amount - theoricAmount;
         if (correction < 10 ** -13) return;
         defaultController.create(Trade, {
-            amount: realAmount,
+            amount: correction.toFixed(12),
             price: 0,
             sell: false,
             symbol: symbol,
@@ -373,7 +373,7 @@ exports.refreshAmount = async (symbol, amount) => {
         let correction = theoricAmount - amount;
         if (correction < 10 ** -13) return;
         defaultController.create(Trade, {
-            amount: theoricAmount - amount,
+            amount: correction.toFixed(12),
             price: 0,
             sell: true,
             symbol: symbol,

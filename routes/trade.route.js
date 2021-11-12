@@ -40,7 +40,7 @@ module.exports = app => {
     router.post('/', async (request, response) => {
         defaultController.edit(Trade, request.body.id, request.body)
             .then(data => {
-                sender.send(new Response(true, "Trade updated ! count in data", data), response);
+                sender.send(new Response(data == 1, `${data} trades deleted (count in data)`, data), response);
             })
             .catch(error => {
                 sender.send(new Response(false, error.message), response);
@@ -50,7 +50,7 @@ module.exports = app => {
     router.delete('/:id', async (request, response) => {
         defaultController.delete(Trade, request.params.id)
             .then(data => {
-                sender.send(new Response(true, "Trade deleted ! count in data", data), response);
+                sender.send(new Response(data == 1, `${data} trades deleted (count in data)`, data), response);
             })
             .catch(error => {
                 sender.send(new Response(false, error.message), response);
