@@ -4,6 +4,7 @@ const defaultController = require('./default.controller');
 
 exports.create = async (trade) => {
     if (trade.amount == 0) return false;
+    if (trade.amount > this.getActualAmount(trade.symbol)) return false;
     return await defaultController.create(Trade, trade)
 }
 
