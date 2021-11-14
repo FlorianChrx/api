@@ -2,6 +2,11 @@ const { Trade } = require('../model/trade.model')
 const { Sequelize } = require("sequelize");
 const defaultController = require('./default.controller');
 
+exports.create = async (trade) => {
+    if (trade.amount == 0) return false;
+    return await defaultController.create(Trade, trade)
+}
+
 /**
  * Get buy trades filtered by symbol
  * @param {string} symbol the symbol of trade

@@ -28,9 +28,13 @@ module.exports = app => {
     })
 
     router.put('/', async (request, response) => {
-        defaultController.create(Trade, request.body)
+        tradeController.create(request.body)
             .then(data => {
-                sender.send(new Response(true, "Trade created !", data), response);
+                if (data) {
+                    sender.send(new Response(true, 'Trade created !', data), response);
+                } else {
+                    sender.send(new Response(false, 'Invalid Trade !'), response);
+                }
             })
             .catch(error => {
                 sender.send(new Response(false, error.message), response);
