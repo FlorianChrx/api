@@ -5,6 +5,11 @@ const defaultController = require('./default.controller');
 const PRECISION = PRECISION;
 const PRICE_PRECISION = 2;
 
+/**
+ * Create a trade with a coherence verification
+ * @param {*} trade the trade we are attempting to create
+ * @returns a boolean to alert a loose or the created trade
+ */
 exports.create = async (trade) => {
     if (trade.amount == 0) return false;
     if (trade.amount > this.getActualAmount(trade.symbol)) return false;
