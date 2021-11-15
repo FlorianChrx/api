@@ -94,7 +94,7 @@ exports.getBenefits = async (symbol) => {
             if (sell.amount < 1 ** -PRECISION) sell.amount = 0;
         }
     });
-
+  
     return +benefits.toFixed(PRICE_PRECISION);
 }
 
@@ -250,7 +250,7 @@ exports.getAllActualInvested = async () => {
         actualInvested += temp;
     }
 
-    return +actualInvested.toFixed(PRECISION);
+  return +actualInvested.toFixed(PRECISION);
 }
 
 /**
@@ -320,7 +320,7 @@ exports.simulateSell = async (symbol, price, amount) => {
         if (amount < 1 ** -PRECISION) amount = 0;
     }
 
-    return +benefits.toFixed(PRECISION);
+  return +benefits.toFixed(PRECISION);
 }
 
 /**
@@ -413,7 +413,7 @@ exports.refreshAmount = async (symbol, amount) => {
         let correction = theoricAmount - amount;
         if (correction < 1 ** -PRECISION) return;
         defaultController.create(Trade, {
-            amount: correction.toFixed(PRECISION),
+          amount: correction.toFixed(PRECISION),
             price: 0,
             sell: true,
             symbol: symbol,
