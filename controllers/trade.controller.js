@@ -13,7 +13,6 @@ const PRICE_PRECISION = 2;
  * @param {*} date the date of searched trade
  */
 exports.existingTrade = async (amount, price, symbol, date) => {
-
     if (!date) return false;
 
     trades = await Trade.findAll({
@@ -24,8 +23,6 @@ exports.existingTrade = async (amount, price, symbol, date) => {
             timestamp: date
         }
     })
-
-    console.log(trades);
 
     return trades && trades.length == 1;
 }
@@ -87,11 +84,11 @@ exports.getBenefits = async (symbol) => {
                 // We reduce buy amount for next sells calcul
                 buys[index].amount -= sell.amount;
                 // If we consumed the buy we go to next
-                if (buys[index].amount < 1 ** -PRECISION) index++;
+                if (buys[index].amount < 10 ** -PRECISION) index++;
                 // We just consumed the sell by uses his maximum amount
                 sell.amount = 0;
             }
-            if (sell.amount < 1 ** -PRECISION) sell.amount = 0;
+            if (sell.amount < 10 ** -PRECISION) sell.amount = 0;
         }
     });
 
@@ -148,11 +145,11 @@ exports.getAveragePrice = async (symbol) => {
                 // We reduce buy amount for next sells calcul
                 buys[index].amount -= sell.amount;
                 // If we consumed the buy we go to next
-                if (buys[index].amount < 1 ** -PRECISION) index++;
+                if (buys[index].amount < 10 ** -PRECISION) index++;
                 // We just consumed the sell by uses his maximum amount
                 sell.amount = 0;
             }
-            if (sell.amount < 1 ** -PRECISION) sell.amount = 0;
+            if (sell.amount < 10 ** -PRECISION) sell.amount = 0;
         }
     });
 
@@ -199,20 +196,24 @@ exports.getActualAmount = async (symbol) => {
 
     sells.forEach(sell => {
         while (sell.amount > 0) {
+            console.log(sell.amount)
             if (sell.amount > buys[index].amount) {
                 // We reduce the sell amount for next loop
                 sell.amount -= buys[index].amount;
+                console.log(sell.amount)
                 // We go to nex buy because we consumed this one by uses his maximum amount
                 index++;
             } else {
+                console.log('lol')
                 // We reduce buy amount for next sells calcul
                 buys[index].amount -= sell.amount;
                 // If we consumed the buy we go to next
-                if (buys[index].amount < 1 ** -PRECISION) index++;
+                if (buys[index].amount < 10 ** -PRECISION) index++;
                 // We just consumed the sell by uses his maximum amount
                 sell.amount = 0;
             }
-            if (sell.amount < 1 ** -PRECISION) sell.amount = 0;
+            console.log(0.000000000001 == 10 ** -PRECISION)
+            if (sell.amount < 10 ** -PRECISION) sell.amount = 0;
         }
     });
 
@@ -287,12 +288,12 @@ exports.simulateSell = async (symbol, price, amount) => {
                 // We reduce buy amount for next sells calcul
                 buys[index].amount -= sell.amount;
                 // If we consumed the buy we go to next
-                if (buys[index].amount < 1 ** -PRECISION) index++;
+                if (buys[index].amount < 10 ** -PRECISION) index++;
                 // We just consumed the sell by uses his maximum amount
                 sell.amount = 0;
             }
         }
-        if (sell.amount < 1 ** -PRECISION) sell.amount = 0;
+        if (sell.amount < 10 ** -PRECISION) sell.amount = 0;
     });
 
     // Now FIFO skipped, calcul benefit of this trade
@@ -313,11 +314,11 @@ exports.simulateSell = async (symbol, price, amount) => {
             // We reduce buy amount for next sells calcul
             buys[index].amount -= amount;
             // If we consumed the buy we go to next
-            if (buys[index].amount < 1 ** -PRECISION) index++;
+            if (buys[index].amount < 10 ** -PRECISION) index++;
             // We just consumed the sell by uses his maximum amount
             amount = 0;
         }
-        if (amount < 1 ** -PRECISION) amount = 0;
+        if (amount < 10 ** -PRECISION) amount = 0;
     }
 
     return +benefits.toFixed(PRECISION);
@@ -401,7 +402,7 @@ exports.refreshAmount = async (symbol, amount) => {
     let theoricAmount = await this.getActualAmount(symbol);
     if (theoricAmount < amount) {
         let correction = amount - theoricAmount;
-        if (correction < 1 ** -PRECISION) return;
+        if (correction < 10 ** -PRECISION) return;
         defaultController.create(Trade, {
             amount: correction.toFixed(PRECISION),
             price: 0,
@@ -411,7 +412,7 @@ exports.refreshAmount = async (symbol, amount) => {
         })
     } else if (theoricAmount > amount) {
         let correction = theoricAmount - amount;
-        if (correction < 1 ** -PRECISION) return;
+        if (correction < 10 ** -PRECISION) return;
         defaultController.create(Trade, {
             amount: correction.toFixed(PRECISION),
             price: 0,
