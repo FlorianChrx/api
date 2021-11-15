@@ -36,6 +36,7 @@ exports.create = async (trade) => {
     if (trade.amount == 0) return false;
     if (trade.amount > this.getActualAmount(trade.symbol)) return false;
     if ((await this.existingTrade(trade.amount, trade.price, trade.symbol, trade.timestamp))) return false;
+    trade.symbol = trade.symbol.replace('/', '-');
     return await defaultController.create(Trade, trade)
 }
 
@@ -204,7 +205,6 @@ exports.getActualAmount = async (symbol) => {
                 // We go to nex buy because we consumed this one by uses his maximum amount
                 index++;
             } else {
-                console.log('lol')
                 // We reduce buy amount for next sells calcul
                 buys[index].amount -= sell.amount;
                 // If we consumed the buy we go to next
@@ -212,7 +212,6 @@ exports.getActualAmount = async (symbol) => {
                 // We just consumed the sell by uses his maximum amount
                 sell.amount = 0;
             }
-            console.log(0.000000000001 == 10 ** -PRECISION)
             if (sell.amount < 10 ** -PRECISION) sell.amount = 0;
         }
     });
