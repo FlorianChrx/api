@@ -9,19 +9,25 @@ const PRICE_PRECISION = 2;
  * Get a trade by his amount, price and date
  * @param {*} amount the amount of searched trade
  * @param {*} price the price of searched trade
+ * @param {*} symbol the symbol of searched trade
  * @param {*} date the date of searched trade
  */
 exports.existingTrade = async (amount, price, symbol, date) => {
+
+    if (!date) return false;
+
     trades = await Trade.findAll({
         where: {
             amount: amount,
             price: price,
             symbol: symbol,
-            date: date
+            timestamp: date
         }
     })
 
-    return trades.length == 1;
+    console.log(trades);
+
+    return trades && trades.length == 1;
 }
 
 /**
@@ -32,7 +38,7 @@ exports.existingTrade = async (amount, price, symbol, date) => {
 exports.create = async (trade) => {
     if (trade.amount == 0) return false;
     if (trade.amount > this.getActualAmount(trade.symbol)) return false;
-    if (this.existingTrade(trade.amount, trade.price, trade.symbol, trade.timestamp)) return false;
+    if ((await this.existingTrade(trade.amount, trade.price, trade.symbol, trade.timestamp))) return false;
     return await defaultController.create(Trade, trade)
 }
 
