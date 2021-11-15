@@ -2,7 +2,7 @@ const { Trade } = require('../model/trade.model')
 const { Sequelize } = require("sequelize");
 const defaultController = require('./default.controller');
 
-const PRECISION = PRECISION;
+const PRECISION = 12;
 const PRICE_PRECISION = 2;
 
 /**
