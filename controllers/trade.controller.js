@@ -6,6 +6,25 @@ const PRECISION = 12;
 const PRICE_PRECISION = 2;
 
 /**
+ * Get a trade by his amount, price and date
+ * @param {*} amount the amount of searched trade
+ * @param {*} price the price of searched trade
+ * @param {*} date the date of searched trade
+ */
+exports.existingTrade = async (amount, price, symbol, date) => {
+    trades = await Trade.findAll({
+        where: {
+            amount: amount,
+            price: price,
+            symbol: symbol,
+            date: date
+        }
+    })
+
+    return trades.length == 1;
+}
+
+/**
  * Create a trade with a coherence verification
  * @param {*} trade the trade we are attempting to create
  * @returns a boolean to alert a loose or the created trade
@@ -13,6 +32,7 @@ const PRICE_PRECISION = 2;
 exports.create = async (trade) => {
     if (trade.amount == 0) return false;
     if (trade.amount > this.getActualAmount(trade.symbol)) return false;
+    if (this.existingTrade(trade.amount, trade.price, trade.symbol, trade.timestamp)) return false;
     return await defaultController.create(Trade, trade)
 }
 
