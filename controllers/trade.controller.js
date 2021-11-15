@@ -37,6 +37,7 @@ exports.create = async (trade) => {
     if (trade.amount > this.getActualAmount(trade.symbol)) return false;
     if ((await this.existingTrade(trade.amount, trade.price, trade.symbol, trade.timestamp))) return false;
     trade.symbol = trade.symbol.replace('/', '-');
+    if (trade.symbol.includes('EUR')) return false;
     return await defaultController.create(Trade, trade)
 }
 
