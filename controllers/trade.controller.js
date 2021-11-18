@@ -5,6 +5,35 @@ const defaultController = require('./default.controller');
 const PRECISION = 12;
 const PRICE_PRECISION = 2;
 
+function browse(buys, sells, index, actions) {
+    sells.forEach(sell => {
+        while (sell.amount > 0) {
+            // console.log(buys[index].amount)
+            // console.log(sell.amount)
+            // console.log(index)
+            if (sell.amount > buys[index].amount) {
+                // If sell amount is bigger than buy one we use the buy amount for the calcul and reduce sell amount
+                if (actions[0]) actions[0](sell, buys, index);
+                // We reduce the sell amount for next loop
+                sell.amount -= buys[index].amount;
+                // We go to nex buy because we consumed this one by uses his maximum amount
+                index++;
+            } else {
+                // If buy amount is bigger than sell one we use the sell amount for the calcul and reduce buy amount
+                if (actions[1]) actions[1](sell, buys, index);
+                // We reduce buy amount for next sells calcul
+                buys[index].amount -= sell.amount;
+                // If we consumed the buy we go to next
+                if (buys[index].amount < 10 ** -PRECISION) index++;
+                // We just consumed the sell by uses his maximum amount
+                sell.amount = 0;
+            }
+            if (sell.amount < 10 ** -PRECISION) sell.amount = 0;
+        }
+    });
+    return index;
+}
+
 /**
  * Get a trade by his amount, price and date
  * @param {*} amount the amount of searched trade
@@ -69,30 +98,17 @@ exports.getBenefits = async (symbol) => {
     const buys = await this.getBuyTrades(symbol);
     const sells = await this.getSellTrades(symbol);
     let benefits = 0;
-    let index = 0;
 
-    sells.forEach(sell => {
-        while (sell.amount > 0) {
-            if (sell.amount > buys[index].amount) {
-                // If sell amount is bigger than buy one we use the buy amount for the calcul and reduce sell amount
-                benefits += buys[index].amount * sell.price - buys[index].amount * buys[index].price;
-                // We reduce the sell amount for next loop
-                sell.amount -= buys[index].amount;
-                // We go to nex buy because we consumed this one by uses his maximum amount
-                index++;
-            } else {
-                // If buy amount is bigger than sell one we use the sell amount for the calcul and reduce buy amount
-                benefits += sell.amount * sell.price - sell.amount * buys[index].price;
-                // We reduce buy amount for next sells calcul
-                buys[index].amount -= sell.amount;
-                // If we consumed the buy we go to next
-                if (buys[index].amount < 10 ** -PRECISION) index++;
-                // We just consumed the sell by uses his maximum amount
-                sell.amount = 0;
-            }
-            if (sell.amount < 10 ** -PRECISION) sell.amount = 0;
-        }
-    });
+    browse(buys, sells, 0, [
+        (sell, buys, index) => {
+            benefits += buys[index].amount * sell.price - buys[index].amount * buys[index].price;
+            console.log(benefits)
+        },
+        (sell, buys, index) => {
+            benefits += sell.amount * sell.price - sell.amount * buys[index].price;
+            console.log(benefits)
+        },
+    ])
 
     return +benefits.toFixed(PRICE_PRECISION);
 }
@@ -136,24 +152,7 @@ exports.getAveragePrice = async (symbol) => {
     const sells = await this.getSellTrades(symbol);
     let index = 0;
 
-    sells.forEach(sell => {
-        while (sell.amount > 0) {
-            if (sell.amount > buys[index].amount) {
-                // We reduce the sell amount for next loop
-                sell.amount -= buys[index].amount;
-                // We go to nex buy because we consumed this one by uses his maximum amount
-                index++;
-            } else {
-                // We reduce buy amount for next sells calcul
-                buys[index].amount -= sell.amount;
-                // If we consumed the buy we go to next
-                if (buys[index].amount < 10 ** -PRECISION) index++;
-                // We just consumed the sell by uses his maximum amount
-                sell.amount = 0;
-            }
-            if (sell.amount < 10 ** -PRECISION) sell.amount = 0;
-        }
-    });
+    index = browse(buys, sells, index, [null, null])
 
     let totalAmount = 0;
     let totalPrice = 0;
@@ -196,30 +195,12 @@ exports.getActualAmount = async (symbol) => {
     const sells = await this.getSellTrades(symbol);
     let index = 0;
 
-    sells.forEach(sell => {
-        while (sell.amount > 0) {
-            console.log(sell.amount)
-            if (sell.amount > buys[index].amount) {
-                // We reduce the sell amount for next loop
-                sell.amount -= buys[index].amount;
-                console.log(sell.amount)
-                // We go to nex buy because we consumed this one by uses his maximum amount
-                index++;
-            } else {
-                // We reduce buy amount for next sells calcul
-                buys[index].amount -= sell.amount;
-                // If we consumed the buy we go to next
-                if (buys[index].amount < 10 ** -PRECISION) index++;
-                // We just consumed the sell by uses his maximum amount
-                sell.amount = 0;
-            }
-            if (sell.amount < 10 ** -PRECISION) sell.amount = 0;
-        }
-    });
+    index = browse(buys, sells, index, [null, null])
 
     let actualAmount = 0;
 
     for (; index < buys.length; index++) {
+        console.log('test' + buys[index].amount)
         actualAmount += buys[index].amount;
     }
 
@@ -277,24 +258,7 @@ exports.simulateSell = async (symbol, price, amount) => {
     const sells = await this.getSellTrades(symbol);
     let index = 0;
 
-    sells.forEach(sell => {
-        while (sell.amount > 0) {
-            if (sell.amount > buys[index].amount) {
-                // We reduce the sell amount for next loop
-                sell.amount -= buys[index].amount;
-                // We go to nex buy because we consumed this one by uses his maximum amount
-                index++;
-            } else {
-                // We reduce buy amount for next sells calcul
-                buys[index].amount -= sell.amount;
-                // If we consumed the buy we go to next
-                if (buys[index].amount < 10 ** -PRECISION) index++;
-                // We just consumed the sell by uses his maximum amount
-                sell.amount = 0;
-            }
-        }
-        if (sell.amount < 10 ** -PRECISION) sell.amount = 0;
-    });
+    index = browse(buys, sells, index, [null, null])
 
     // Now FIFO skipped, calcul benefit of this trade
 
