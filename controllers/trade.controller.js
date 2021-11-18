@@ -266,34 +266,24 @@ exports.simulateFullSell = async (symbol, price) => {
 exports.simulateSell = async (symbol, price, amount) => {
     const buys = await this.getBuyTrades(symbol);
     const sells = await this.getSellTrades(symbol);
-    let index = 0;
-
-    index = browse(buys, sells, index, [null, null])
-
-    // Now FIFO skipped, calcul benefit of this trade
 
     let benefits = 0;
 
-    while (amount > 0) {
-        if (amount > buys[index].amount) {
-            // If sell amount is bigger than buy one we use the buy amount for the calcul and reduce sell amount
-            benefits += buys[index].amount * price - buys[index].amount * buys[index].price;
-            // We reduce the sell amount for next loop
-            amount -= buys[index].amount;
-            // We go to nex buy because we consumed this one by uses his maximum amount
-            index++;
-        } else {
-            // If buy amount is bigger than sell one we use the sell amount for the calcul and reduce buy amount
-            benefits += amount * price - amount * buys[index].price;
-            // We reduce buy amount for next sells calcul
-            buys[index].amount -= amount;
-            // If we consumed the buy we go to next
-            if (buys[index].amount < 10 ** -PRECISION) index++;
-            // We just consumed the sell by uses his maximum amount
-            amount = 0;
-        }
-        if (amount < 10 ** -PRECISION) amount = 0;
-    }
+    const simulateSell = [{
+        amount: amount,
+        price: price,
+        symbol: symbol,
+        sell: false
+    }]
+
+    browse(buys, simulateSell, browse(buys, sells, index, [null, null]), [
+        (sell, buys, index) => {
+            benefits += buys[index].amount * sell.price - buys[index].amount * buys[index].price;
+        },
+        (sell, buys, index) => {
+            benefits += sell.amount * sell.price - sell.amount * buys[index].price;
+        },
+    ])
 
     return +benefits.toFixed(PRECISION);
 }
