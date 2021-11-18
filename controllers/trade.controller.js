@@ -5,6 +5,16 @@ const defaultController = require('./default.controller');
 const PRECISION = 12;
 const PRICE_PRECISION = 2;
 
+/**
+ * Browse trades to arrive at now and potentially execute functions
+ * action[0] is the action executed when sell amount is bigger than the buy one
+ * action[1] is the action executes when sell amount is lower than the buy one
+ * @param {*} buys the list of buy trades
+ * @param {*} sells the list of buy trades
+ * @param {*} index the index to use for browse trades
+ * @param {*} actions an array of 2 actions to execute (need parameters: sell (current sell), buys (the buys list), index (current index position))
+ * @returns the index in buys trades after browsing
+ */
 function browse(buys, sells, index, actions) {
     sells.forEach(sell => {
         while (sell.amount > 0) {
