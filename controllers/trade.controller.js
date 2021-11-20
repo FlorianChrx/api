@@ -18,9 +18,6 @@ const PRICE_PRECISION = 2;
 function browse(buys, sells, index, actions) {
     sells.forEach(sell => {
         while (sell.amount > 0) {
-            // console.log(buys[index].amount)
-            // console.log(sell.amount)
-            // console.log(index)
             if (sell.amount > buys[index].amount) {
                 // If sell amount is bigger than buy one we use the buy amount for the calcul and reduce sell amount
                 if (actions[0]) actions[0](sell, buys, index);
@@ -112,11 +109,9 @@ exports.getBenefits = async (symbol) => {
     browse(buys, sells, 0, [
         (sell, buys, index) => {
             benefits += buys[index].amount * sell.price - buys[index].amount * buys[index].price;
-            console.log(benefits)
         },
         (sell, buys, index) => {
             benefits += sell.amount * sell.price - sell.amount * buys[index].price;
-            console.log(benefits)
         },
     ])
 
@@ -210,7 +205,6 @@ exports.getActualAmount = async (symbol) => {
     let actualAmount = 0;
 
     for (; index < buys.length; index++) {
-        console.log('test' + buys[index].amount)
         actualAmount += buys[index].amount;
     }
 
