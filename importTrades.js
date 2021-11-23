@@ -1,7 +1,7 @@
 const fs = require('fs');
 const readline = require('readline');
 const axios = require('axios');
-
+const EURCONVERTION = 1.1270;
 
 importTrades = async () => {
     const fileStream = fs.createReadStream('/Users/FlorianCHIRAUX/Downloads/order-history.csv');
@@ -23,6 +23,11 @@ importTrades = async () => {
                 sell: line.split(',')[4] == 'sell',
                 symbol: line.split(',')[3],
                 timestamp: line.split(',')[2]
+            }
+
+            if (trade.symbol.toUpperCase().includes('eur'.toUpperCase())) {
+                trade.price *= EURCONVERTION;
+                trade.symbol.replace('EUR', 'USD')
             }
 
             axios.put('http://localhost:9090/api/trade', trade).catch(err => { console.log(err) });
