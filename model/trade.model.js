@@ -20,7 +20,7 @@ exports.Trade = orm.define('Trade', {
         allowNull: false
     },
     symbol: {
-        type: DataTypes.STRING(4),
+        type: DataTypes.STRING(10),
         allowNull: false
     },
     timestamp: {
