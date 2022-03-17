@@ -1,4 +1,4 @@
-const { Response } = require('../model/response.model');
+const {ApiResponse} = require('../model/response.model');
 
 /**
  * Init all http routing
@@ -13,11 +13,15 @@ exports.initRoutes = app => {
 
 /**
  * Send the API response with right status
- * @param {Response} response the API response
+ * @param {ApiResponse} response the API response
  * @param {*} httpResponse the http response
  */
 exports.send = function (response, httpResponse) {
-    if (response.success) {
+    if(!response.data) {
+        response.isSuccess = false;
+        response.data = "Fatal error !";
+    }
+    if (response.isSuccess) {
         httpResponse.send(response);
     } else {
         httpResponse.status(500).send(response);
