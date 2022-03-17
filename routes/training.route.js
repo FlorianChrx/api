@@ -1,58 +1,58 @@
-const { Response } = require('../model/response.model');
-const { Training } = require('../model/training.model')
+const {ApiResponse} = require('../model/response.model');
 const sender = require('./router')
+const TrainingController = require("../controllers/training.controller");
 
 module.exports = app => {
     let router = require('express').Router();
-    const defaultController = require('../controllers/default.controller')
+    const trainingController = new TrainingController();
 
     router.get('/', async (request, response) => {
-        defaultController.getAll(Training)
+        trainingController.getAll()
             .then(data => {
-                sender.send(new Response(true, "Trainings available in response data", data), response);
+                sender.send(new ApiResponse(true, "Trainings available in response data", data), response);
             })
             .catch(error => {
-                sender.send(new Response(false, error.message), response);
+                sender.send(new ApiResponse(false, error.message), response);
             })
     })
 
     router.get('/:id', async (request, response) => {
-        defaultController.get(Training, request.params.id)
+        trainingController.get(request.params.id)
             .then(data => {
-                sender.send(new Response(true, "Training available in response data", data), response);
+                sender.send(new ApiResponse(true, "Training available in response data", data), response);
             })
             .catch(error => {
-                sender.send(new Response(false, error.message), response);
+                sender.send(new ApiResponse(false, error.message), response);
             })
     })
 
     router.put('/', async (request, response) => {
-        defaultController.create(Training, request.body)
+        trainingController.create(request.body)
             .then(data => {
-                sender.send(new Response(true, "Training created !", data), response);
+                sender.send(new ApiResponse(true, "Training created !", data), response);
             })
             .catch(error => {
-                sender.send(new Response(false, error.message), response);
+                sender.send(new ApiResponse(false, error.message), response);
             })
     })
 
     router.post('/', async (request, response) => {
-        defaultController.edit(Training, request.body.id, request.body)
+        trainingController.edit(request.body.id, request.body)
             .then(data => {
-                sender.send(new Response(data == 1, `${data} trainings deleted (count in data)`, data), response);
+                sender.send(new ApiResponse(data === 1, `${data} trainings deleted (count in data)`, data), response);
             })
             .catch(error => {
-                sender.send(new Response(false, error.message), response);
+                sender.send(new ApiResponse(false, error.message), response);
             })
     })
 
     router.delete('/:id', async (request, response) => {
-        defaultController.delete(Training, request.params.id)
+        trainingController.delete(request.params.id)
             .then(data => {
-                sender.send(new Response(data == 1, `${data} trainings deleted (count in data)`, data), response);
+                sender.send(new ApiResponse(data === 1, `${data} trainings deleted (count in data)`, data), response);
             })
             .catch(error => {
-                sender.send(new Response(false, error.message), response);
+                sender.send(new ApiResponse(false, error.message), response);
             })
     })
 
