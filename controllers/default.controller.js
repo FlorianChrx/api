@@ -1,5 +1,5 @@
-exports.DefaultController = class DefaultController<T> {
-    model: T;
+exports.DefaultController = class DefaultController {
+    model;
 
 
     /**
