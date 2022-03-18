@@ -5,7 +5,7 @@ const {DefaultController} = require("./default.controller");
 const PRECISION = 12;
 const PRICE_PRECISION = 2;
 
-module.exports = class TradeController extends DefaultController<Trade> {
+module.exports = class TradeController extends DefaultController {
 
     constructor() {
         super(Trade);
