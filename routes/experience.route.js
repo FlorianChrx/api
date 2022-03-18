@@ -1,6 +1,6 @@
-const {ApiResponse} = require('../model/response.model');
+const ApiResponse = require('../model/response.model');
 const sender = require('./router')
-const {ExperienceController} = require("../controllers/experience.controller");
+const ExperienceController = require("../controllers/experience.controller");
 
 module.exports = app => {
     let router = require('express').Router();

@@ -1,4 +1,4 @@
-const {ApiResponse} = require('../model/response.model');
+const ApiResponse = require('../model/response.model');
 
 module.exports = app => {
     let router = require('express').Router();
