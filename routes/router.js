@@ -1,5 +1,3 @@
-const {ApiResponse} = require('../model/response.model');
-
 /**
  * Init all http routing
  */

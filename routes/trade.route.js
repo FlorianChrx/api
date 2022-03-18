@@ -1,6 +1,6 @@
-const {ApiResponse} = require('../model/response.model');
+const ApiResponse = require('../model/response.model');
 const sender = require('./router')
-const {TradeController} = require("../controllers/trade.controller");
+const TradeController = require("../controllers/trade.controller");
 
 module.exports = app => {
     let router = require('express').Router();

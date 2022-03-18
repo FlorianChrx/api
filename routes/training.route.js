@@ -1,4 +1,4 @@
-const {ApiResponse} = require('../model/response.model');
+const ApiResponse = require('../model/response.model');
 const sender = require('./router')
 const TrainingController = require("../controllers/training.controller");
 
